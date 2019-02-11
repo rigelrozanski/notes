@@ -44,4 +44,5 @@ func main() {
 	for _, line := range note {
 		fmt.Println(line)
 	}
+	fmt.Println("")
 }
