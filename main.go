@@ -1,11 +1,11 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 	"strings"
 
+	"github.com/go-yaml/yaml"
 	wb "github.com/rigelrozanski/wb/lib"
 )
 
@@ -14,8 +14,8 @@ const wbName = "notes"
 
 // structure of notes to be stored
 type Notes struct {
-	Aliases map[string]string   `json:"aliases"`
-	Goodies map[string][]string `json:"goodies"`
+	Aliases map[string]string `yaml:"aliases"`
+	Goodies map[string]string `yaml:"goodies"`
 }
 
 func main() {
@@ -35,8 +35,9 @@ func main() {
 
 	// parse the notes file
 	var notes Notes
-	json.Unmarshal(notesBz, &notes)
-	if len(notes.Goodies) == 0 {
+	err := yaml.Unmarshal(notesBz, &notes)
+	if len(notes.Goodies) == 0 || err != nil {
+		fmt.Printf("debug err: %v\n", err)
 		fmt.Printf("debug notes: %v\n", notes)
 		fmt.Println("notes wb is not properly formatted")
 		return
@@ -57,8 +58,5 @@ func main() {
 		return
 	}
 
-	for _, line := range note {
-		fmt.Printf("    %v\n", line)
-	}
-	fmt.Println("")
+	fmt.Printf("\n%v\n", note)
 }
